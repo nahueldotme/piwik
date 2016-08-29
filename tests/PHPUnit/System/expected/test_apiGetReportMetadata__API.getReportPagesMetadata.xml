@@ -1097,7 +1097,7 @@
 		<subcategory>
 			<id>UserId_UserReportTitle</id>
 			<name>Users</name>
-			<order>99</order>
+			<order>6</order>
 		</subcategory>
 		<widgets>
 			<row>
