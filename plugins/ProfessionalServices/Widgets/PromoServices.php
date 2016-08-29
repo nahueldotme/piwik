@@ -6,17 +6,16 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-namespace Piwik\Plugins\ProfessionalServices;
+namespace Piwik\Plugins\ProfessionalServices\Widgets;
 
-use Piwik\Piwik;
+use Piwik\Container\StaticContainer;
+use Piwik\Plugins\ProfessionalServices\Promo;
 use Piwik\ProfessionalServices\Advertising;
-use Piwik\Plugins\ExampleRssWidget\RssRenderer;
 use Piwik\View;
+use Piwik\Widget\WidgetConfig;
 
-class Widgets extends \Piwik\Plugin\Widgets
+class PromoServices extends \Piwik\Widget\Widget
 {
-    protected $category = 'About Piwik';
-
     /**
      * @var Advertising
      */
@@ -33,19 +32,16 @@ class Widgets extends \Piwik\Plugin\Widgets
         $this->promo = $promo;
     }
 
-    protected function init()
+    public static function configure(WidgetConfig $config)
     {
-        if ($this->advertising->areAdsForProfessionalServicesEnabled()) {
-            $this->addWidget('ProfessionalServices_WidgetProfessionalServicesForPiwik', 'promoServices');
-        }
+        $config->setCategoryId('About Piwik');
+        $config->setName('ProfessionalServices_WidgetProfessionalServicesForPiwik');
+
+        $advertising = StaticContainer::get('Piwik\ProfessionalServices\Advertising');
+        $config->setIsEnabled($advertising->areAdsForProfessionalServicesEnabled());
     }
 
-    public function rss()
-    {
-        return '';
-    }
-
-    public function promoServices()
+    public function render()
     {
         $view = new View('@ProfessionalServices/promoServicesWidget');
 
