@@ -30,6 +30,7 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
 use Piwik\ProxyHeaders;
 use Piwik\SettingsPiwik;
+use Piwik\Theme;
 use Piwik\Tracker\TrackerCodeGenerator;
 use Piwik\Translation\Translator;
 use Piwik\Updater;
@@ -79,13 +80,15 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * Installation Step 1: Welcome
      *
      * Can also display an error message when there is a failure early (eg. DB connection failed)
+     *
+     * @param string $possibleErrorMessage Possible error message which may be set in the frontcontroller when event. Config.badConfigurationFile was triggered
      */
-    function welcome()
+    function welcome($possibleErrorMessage = null)
     {
         // Delete merged js/css files to force regenerations based on updated activated plugin list
         Filesystem::deleteAllCacheOnUpdate();
 
-        $this->checkPiwikIsNotInstalled();
+        $this->checkPiwikIsNotInstalled($possibleErrorMessage);
         $view = new View(
             '@Installation/welcome',
             $this->getInstallationSteps(),
@@ -405,7 +408,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
          */
         Piwik::postEvent('Installation.defaultSettingsForm.init', array($form));
 
-        $form->addElement('submit', 'submit', array('value' => Piwik::translate('General_ContinueToPiwik') . ' »', 'class' => 'btn btn-lg'));
+        $form->addElement('submit', 'submit', array('value' => Piwik::translate('General_ContinueToPiwik') . ' »', 'class' => 'btn'));
 
         if ($form->validate()) {
             try {
@@ -483,18 +486,60 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     }
 
     /**
-     * Prints out the CSS for installer/updater
+     * Return the base.less compiled to css
      *
-     * During installation and update process, we load a minimal Less file.
-     * At this point Piwik may not be setup yet to write files in tmp/assets/
-     * so in this case we compile and return the string on every request.
+     * @return string
      */
-    public function getBaseCss()
+    public function getInstallationCss()
     {
         Common::sendHeader('Content-Type: text/css');
-        return AssetManager::getInstance()->getCompiledBaseCss()->getContent();
+        Common::sendHeader('Cache-Control: max-age=' . (60 * 60));
+
+        $files = array(
+            'plugins/Morpheus/stylesheets/base/bootstrap.css',
+            'plugins/Morpheus/stylesheets/base/icons.css',
+            'libs/jquery/themes/base/jquery-ui.min.css',
+            'libs/bower_components/materialize/dist/css/materialize.min.css',
+            'plugins/Morpheus/stylesheets/base.less',
+            'plugins/Morpheus/stylesheets/general/_forms.less',
+            'plugins/Installation/stylesheets/installation.css'
+        );
+
+        return AssetManager::compileCustomStylesheets($files);
     }
 
+    /**
+     * Return the base.less compiled to css
+     *
+     * @return string
+     */
+    public function getInstallationJs()
+    {
+        Common::sendHeader('Content-Type: application/javascript; charset=UTF-8');
+        Common::sendHeader('Cache-Control: max-age=' . (60 * 60));
+
+        $files = array(
+            'libs/bower_components/jquery/dist/jquery.min.js',
+            'libs/bower_components/jquery-ui/ui/minified/jquery-ui.min.js',
+            'libs/bower_components/materialize/dist/js/materialize.min.js',
+            'libs/bower_components/angular/angular.min.js',
+            'libs/bower_components/angular-sanitize/angular-sanitize.js',
+            'libs/bower_components/angular-animate/angular-animate.js',
+            'libs/bower_components/angular-cookies/angular-cookies.js',
+            'libs/bower_components/ngDialog/js/ngDialog.min.js',
+            'plugins/CoreHome/angularjs/common/services/service.module.js',
+            'plugins/CoreHome/angularjs/common/filters/filter.module.js',
+            'plugins/CoreHome/angularjs/common/filters/translate.js',
+            'plugins/CoreHome/angularjs/common/directives/directive.module.js',
+            'plugins/CoreHome/angularjs/common/directives/focus-anywhere-but-here.js',
+            'plugins/CoreHome/angularjs/piwikApp.config.js',
+            'plugins/CoreHome/angularjs/piwikApp.js',
+            'plugins/Installation/javascripts/installation.js',
+        );
+
+        return AssetManager::compileCustomJs($files);
+    }
+    
     private function getParam($name)
     {
         return Common::getRequestVar($name, false, 'string');
@@ -551,14 +596,17 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         LanguagesManager::setLanguageForSession($translator->getCurrentLanguage());
     }
 
-    private function checkPiwikIsNotInstalled()
+    private function checkPiwikIsNotInstalled($possibleErrorMessage = null)
     {
         if (!SettingsPiwik::isPiwikInstalled()) {
             return;
         }
+
+        $possibleErrorMessage = $possibleErrorMessage ? sprintf('<br/><br/>Original error was "%s".<br/>', $possibleErrorMessage) : '';
+
         \Piwik\Plugins\Login\Controller::clearSession();
         $message = Piwik::translate('Installation_InvalidStateError',
-            array('<br /><strong>',
+            array($possibleErrorMessage . '<br /><strong>',
                   // piwik-is-already-installed is checked against in checkPiwikServerWorking
                   '</strong><a id="piwik-is-already-installed" href=\'' . Common::sanitizeInputValue(Url::getCurrentUrlWithoutFileName()) . '\'>',
                   '</a>')
@@ -695,7 +743,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             if (!isset($params['piwikpro'])) {
                 $params['piwikpro'] = '0';
             }
-            $url .= '?' . http_build_query($params, '', '&');
+            $url .= '?' . Http::buildQuery($params);
             try {
                 Http::sendHttpRequest($url, $timeout = 2);
             } catch (Exception $e) {

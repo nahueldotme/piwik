@@ -71,13 +71,8 @@
 
                     var category = _pk_translate('CoreHome_Menu');
 
-                    $rootElement.find('#topRightBar .navbar-right li > a').each(function (index, element) {
+                    $rootElement.find('nav .side-nav li > a').each(function (index, element) {
                         var $element = $(element);
-
-                        if ($element.is('#topmenu-usersmanager')) {
-                            // ignore languages manager
-                            return;
-                        }
 
                         var text = trim($element.text());
 
@@ -265,6 +260,9 @@
                 };
 
                 Mousetrap.bind('f', function(event) {
+                    if (event.altKey) {
+                        return;
+                    }
                     if (event.preventDefault) {
                         event.preventDefault();
                     } else {

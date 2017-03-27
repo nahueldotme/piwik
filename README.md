@@ -36,8 +36,9 @@ Piwik is released under the GPL v3 (or later) license, see [misc/gpl-3.0.txt](mi
 
 ## Requirements
 
-  * PHP 5.3.3 or greater
-  * MySQL 4.1 or greater, and either MySQLi or PDO library must be enabled
+  * PHP 5.5.9 or greater
+  * MySQL version 5.5 or greater, or MariaDB 
+  * PHP extension pdo and pdo_mysql, or the MySQLi extension.
   * Piwik is OS / server independent
 
 See http://piwik.org/docs/requirements/
@@ -52,7 +53,7 @@ See http://piwik.org/docs/requirements/
 
 See http://piwik.org/docs/installation/
 
-If you do not have a server, consider our Piwik Hosting partner: http://piwik.org/hosting/
+If you do not have a server, consider our Piwik Hosting partner: https://www.innocraft.cloud/
 
 ## Changelog
 
@@ -100,7 +101,7 @@ What makes Piwik unique from the competition:
 
   * You own your web analytics data: since Piwik is installed on your server, the data is stored in your own database and you can get all the statistics using the powerful Piwik Analytics API.
 
-  * Piwik is a Free Software which can easily be configured to respect your visitors privacy.
+  * Piwik is a Free Software which can easily be configured to respect your visitors' privacy.
 
   * Modern, easy to use User Interface: you can fully customize your dashboard, drag and drop widgets and more.
 

@@ -45,20 +45,18 @@
 	<firstVisit>
 		
 		
-		<daysAgo>2148</daysAgo>
+		
 		<referrerType>direct</referrerType>
 		<referralSummary>Direct Entry</referralSummary>
 	</firstVisit>
 	<lastVisit>
 		
 		
-		<daysAgo>2118</daysAgo>
+		
 		<referrerType>direct</referrerType>
 		<referralSummary>Direct Entry</referralSummary>
 	</lastVisit>
 	<visitsAggregated>31</visitsAggregated>
-	
-	
 	<lastVisits>
 		<row>
 			<idSite>1</idSite>
@@ -73,6 +71,7 @@
 					<pageIdAction>6</pageIdAction>
 					
 					<pageId>31</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -99,6 +98,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -110,19 +110,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -146,11 +146,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -159,6 +159,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -173,6 +179,7 @@
 					<pageIdAction>4</pageIdAction>
 					
 					<pageId>30</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -199,6 +206,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -210,19 +218,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -246,11 +254,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -259,6 +267,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -273,6 +287,7 @@
 					<pageIdAction>2</pageIdAction>
 					
 					<pageId>29</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -299,6 +314,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -310,19 +326,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -346,11 +362,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -359,6 +375,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -373,6 +395,7 @@
 					<pageIdAction>7</pageIdAction>
 					
 					<pageId>28</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -399,6 +422,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -410,19 +434,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -446,11 +470,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -459,6 +483,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -473,6 +503,7 @@
 					<pageIdAction>6</pageIdAction>
 					
 					<pageId>27</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -499,6 +530,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -510,19 +542,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -546,11 +578,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -559,6 +591,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -573,6 +611,7 @@
 					<pageIdAction>4</pageIdAction>
 					
 					<pageId>26</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -599,6 +638,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -610,19 +650,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -646,11 +686,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -659,6 +699,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -673,6 +719,7 @@
 					<pageIdAction>2</pageIdAction>
 					
 					<pageId>25</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -699,6 +746,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -710,19 +758,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -746,11 +794,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -759,6 +807,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -773,6 +827,7 @@
 					<pageIdAction>7</pageIdAction>
 					
 					<pageId>24</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -799,6 +854,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -810,19 +866,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -846,11 +902,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -859,6 +915,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -873,6 +935,7 @@
 					<pageIdAction>6</pageIdAction>
 					
 					<pageId>23</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -899,6 +962,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -910,19 +974,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -946,11 +1010,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -959,6 +1023,12 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 		<row>
 			<idSite>1</idSite>
@@ -973,6 +1043,7 @@
 					<pageIdAction>4</pageIdAction>
 					
 					<pageId>22</pageId>
+					<interactionPosition>1</interactionPosition>
 					<icon />
 					
 				</row>
@@ -999,6 +1070,7 @@
 			<visitDurationPretty>0s</visitDurationPretty>
 			<searches>0</searches>
 			<actions>1</actions>
+			<interactions>1</interactions>
 			<referrerType>direct</referrerType>
 			<referrerTypeName>Direct Entry</referrerTypeName>
 			<referrerName />
@@ -1010,19 +1082,19 @@
 			<languageCode />
 			<language>Unknown</language>
 			<deviceType>Unknown</deviceType>
-			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.gif</deviceTypeIcon>
+			<deviceTypeIcon>plugins/DevicesDetection/images/screens/unknown.png</deviceTypeIcon>
 			<deviceBrand>Unknown</deviceBrand>
 			<deviceModel />
 			<operatingSystem>Unknown</operatingSystem>
 			<operatingSystemName>Unknown</operatingSystemName>
-			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.gif</operatingSystemIcon>
+			<operatingSystemIcon>plugins/DevicesDetection/images/os/UNK.png</operatingSystemIcon>
 			<operatingSystemCode>UNK</operatingSystemCode>
 			<operatingSystemVersion>UNK</operatingSystemVersion>
 			<browserFamily />
 			<browserFamilyDescription>Unknown</browserFamilyDescription>
 			<browser>Unknown</browser>
 			<browserName>Unknown</browserName>
-			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.gif</browserIcon>
+			<browserIcon>plugins/DevicesDetection/images/browsers/UNK.png</browserIcon>
 			<browserCode>UNK</browserCode>
 			<browserVersion />
 			<events>0</events>
@@ -1046,11 +1118,11 @@
 			<plugins>flash, java</plugins>
 			<pluginsIcons>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/flash.png</pluginIcon>
 					<pluginName>flash</pluginName>
 				</row>
 				<row>
-					<pluginIcon>plugins/DevicePlugins/images/plugins/java.gif</pluginIcon>
+					<pluginIcon>plugins/DevicePlugins/images/plugins/java.png</pluginIcon>
 					<pluginName>java</pluginName>
 				</row>
 			</pluginsIcons>
@@ -1059,7 +1131,16 @@
 			
 			
 			
+			<totalEcommerceRevenue>0.00</totalEcommerceRevenue>
+			<totalEcommerceConversions>0</totalEcommerceConversions>
+			<totalEcommerceItems>0</totalEcommerceItems>
+			<totalAbandonedCartsRevenue>0.00</totalAbandonedCartsRevenue>
+			<totalAbandonedCarts>0</totalAbandonedCarts>
+			<totalAbandonedCartsItems>0</totalAbandonedCartsItems>
 		</row>
 	</lastVisits>
 	<userId>0</userId>
+	
+	
+	
 </result>

@@ -35,11 +35,30 @@ abstract class ReportRenderer extends BaseFactory
     const PDF_FORMAT = 'pdf';
     const CSV_FORMAT = 'csv';
 
+    protected $idSite = 'all';
+
+    protected $report;
+
     private static $availableReportRenderers = array(
         self::PDF_FORMAT,
         self::HTML_FORMAT,
         self::CSV_FORMAT,
     );
+
+    /**
+     * Sets the site id
+     *
+     * @param int $idSite
+     */
+    public function setIdSite($idSite)
+    {
+        $this->idSite = $idSite;
+    }
+
+    public function setReport($report)
+    {
+        $this->report = $report;
+    }
 
     protected static function getClassNameFromClassId($rendererType)
     {
@@ -151,11 +170,11 @@ abstract class ReportRenderer extends BaseFactory
         $outputFilename = StaticContainer::get('path.tmp') . '/assets/' . $filename;
 
         @chmod($outputFilename, 0600);
-        
+
         if(file_exists($outputFilename)){
             @unlink($outputFilename);
         }
-        
+
         return $outputFilename;
     }
 

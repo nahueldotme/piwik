@@ -36,6 +36,12 @@ class SetConfigTest extends ConsoleCommandTestCase
         parent::setUp();
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->makeLocalConfigWritable();
+    }
+
     public function test_Command_SucceedsWhenOptionsUsed()
     {
         $code = $this->applicationTester->run(array(
@@ -80,6 +86,22 @@ class SetConfigTest extends ConsoleCommandTestCase
         );
     }
 
+    public function test_Command_FailsWithMissingFilePermissionException_whenConfigFileNotWritable()
+    {
+        $this->makeLocalConfigNotWritable();
+
+        $code = $this->applicationTester->run(array(
+            'command' => 'config:set',
+            'assignment' => array(
+                'MySection.other_array_value=[]',
+            ),
+            '-vvv' => false,
+        ));
+
+        $this->assertNotEquals(0, $code, $this->getCommandDisplayOutputErrorMessage());
+        $this->assertContains('[Piwik\Exception\MissingFilePermissionException]', $this->applicationTester->getDisplay());
+    }
+
     public function test_Command_SucceedsWhenArgumentsUsed()
     {
         $config = Config::getInstance();
@@ -109,7 +131,7 @@ class SetConfigTest extends ConsoleCommandTestCase
         $this->assertEquals(array('def'), $config->MySection['object_value']);
         $this->assertArrayNotHasKey('other_array_value', $config->MySection);
 
-        $this->assertContains("Done.", $this->applicationTester->getDisplay());
+        $this->assertContains("done.", $this->applicationTester->getDisplay());
     }
 
     /**
@@ -128,7 +150,7 @@ class SetConfigTest extends ConsoleCommandTestCase
         $config = self::makeNewConfig();
 
         $this->assertEquals(0, $config->Tracker['debug']);
-        $this->assertContains("Done.", $this->applicationTester->getDisplay());
+        $this->assertContains("done.", $this->applicationTester->getDisplay());
     }
 
     public function getOptionsForSettingValueToZeroTests()
@@ -189,6 +211,25 @@ class SetConfigTest extends ConsoleCommandTestCase
         $configPath = self::getTestConfigFilePath();
         if (file_exists($configPath)) {
             unlink($configPath);
+        }
+    }
+
+    protected function makeLocalConfigNotWritable()
+    {
+        $local = Config::getInstance()->getLocalPath();
+        touch($local);
+        chmod($local, 0444);
+        $this->assertFalse(is_writable($local));
+    }
+
+    protected function makeLocalConfigWritable()
+    {
+        $local = Config::getInstance()->getLocalPath();
+        @chmod(dirname($local), 0755);
+        @chmod($local, 0755);
+        $this->assertTrue(is_writable(dirname($local)));
+        if(file_exists($local)) {
+            $this->assertTrue(is_writable($local));
         }
     }
 }

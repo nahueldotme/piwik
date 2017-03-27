@@ -13,52 +13,11 @@ use Piwik\Common;
 use Piwik\Db;
 use Piwik\Piwik;
 use Piwik\Plugin\ControllerAdmin;
-use Piwik\Plugin\Manager AS PluginManager;
 use Piwik\Plugin\Report;
 use Piwik\View;
 
 class Controller extends \Piwik\Plugin\Controller
 {
-    public function index()
-    {
-        return $this->devices();
-    }
-    
-    public function devices()
-    {
-        $view = new View('@DevicesDetection/devices');
-        $view->deviceTypes = $this->renderReport('getType');
-        $view->deviceBrands = $this->renderReport('getBrand');
-        $view->deviceModels = $this->renderReport('getModel');
-
-        $isResolutionEnabled = PluginManager::getInstance()->isPluginActivated('Resolution');
-        if ($isResolutionEnabled) {
-            $view->resolutions = $this->renderReport(Report::factory('Resolution', 'getResolution'));
-        }
-
-        return $view->render();
-    }
-
-    public function software()
-    {
-        $view = new View('@DevicesDetection/software');
-        $view->osReport = $this->renderReport('getOsVersions');
-        $view->browserReport = $this->renderReport('getBrowsers');
-        $view->browserEngineReport = $this->renderReport('getBrowserEngines');
-
-        $isResolutionEnabled = PluginManager::getInstance()->isPluginActivated('Resolution');
-        if ($isResolutionEnabled) {
-            $view->configurations = $this->renderReport(Report::factory('Resolution', 'getConfiguration'));
-        }
-
-        $isDevicePluginsEnabled = PluginManager::getInstance()->isPluginActivated('DevicePlugins');
-        if ($isDevicePluginsEnabled) {
-            $view->browserPlugins = $this->renderReport(Report::factory('DevicePlugins', 'getPlugin'));
-        }
-
-        return $view->render();
-    }
-
     public function detection()
     {
         Piwik::checkUserHasSomeAdminAccess();
@@ -89,7 +48,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view->device_type_logo    = getDeviceTypeLogo($uaParser->getDeviceName());
         $view->device_model        = $uaParser->getModel();
         $view->device_brand        = getDeviceBrandLabel($uaParser->getBrand());
-        $view->device_brand_logo   = getBrandLogo($uaParser->getBrand());
+        $view->device_brand_logo   = getBrandLogo($view->device_brand);
 
         return $view->render();
     }

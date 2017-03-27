@@ -74,7 +74,19 @@
 
         var apiMethod = this.dataTable.param.module + '.' + this.dataTable.param.action;
 
-        this.openPopover(apiMethod, segment, {});
+        var extraParams = {};
+        if (this.dataTable.param.date && this.dataTable.param.period) {
+            extraParams = {date: this.dataTable.param.date, period: this.dataTable.param.period};
+        }
+
+        $.each(this.dataTable.param, function (index, value) {
+            // we automatically add fields like idDimension, idGoal etc.
+            if (index !== 'idSite' && index.indexOf('id') === 0 && $.isNumeric(value)) {
+                extraParams[index] = value;
+            }
+        });
+
+        this.openPopover(apiMethod, segment, extraParams);
     };
 
     DataTable_RowActions_SegmentVisitorLog.prototype.doOpenPopover = function (urlParam) {

@@ -288,6 +288,13 @@ DataTable_RowActions_RowEvolution.prototype.performAction = function (label, tr,
         label = this.multiEvolutionRows.join(',');
     }
 
+    $.each(this.dataTable.param, function (index, value) {
+        // we automatically add fields like idDimension, idGoal etc.
+        if (index !== 'idSite' && index.indexOf('id') === 0 && $.isNumeric(value)) {
+            extraParams[index] = value;
+        }
+    });
+
     // check if abandonedCarts is in the dataTable params and if so, propagate to row evolution request
     if (this.dataTable.param.abandonedCarts !== undefined) {
         extraParams['abandonedCarts'] = this.dataTable.param.abandonedCarts;
@@ -392,14 +399,19 @@ DataTable_RowActions_RowEvolution.prototype.showRowEvolution = function (apiMeth
     requestParams.colors = JSON.stringify(piwik.getSparklineColors());
 
     var idDimension;
+
     if (broadcast.getValueFromUrl('module') === 'Widgetize') {
-        idDimension = broadcast.getValueFromUrl('idDimension');
+        idDimension = broadcast.getValueFromUrl('subcategory');
     } else {
-        idDimension = broadcast.getValueFromHash('idDimension');
+        idDimension = broadcast.getValueFromHash('subcategory');
     }
 
-    if (idDimension) {
-        requestParams.idDimension = parseInt(idDimension, 10);
+    if (idDimension && ('' + idDimension).indexOf('customdimension') === 0) {
+        idDimension = ('' + idDimension).replace('customdimension', '');
+        idDimension = parseInt(idDimension, 10);
+        if (idDimension > 0) {
+            requestParams.idDimension = idDimension;
+        }
     }
 
     $.extend(requestParams, extraParams);

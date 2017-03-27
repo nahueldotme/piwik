@@ -130,7 +130,7 @@ class RowEvolution
         $metricsText = Piwik::translate('RowEvolution_AvailableMetrics');
         $popoverTitle = '';
         if ($this->rowLabel) {
-            $icon = $this->rowIcon ? '<img src="' . $this->rowIcon . '" alt="">' : '';
+            $icon = $this->rowIcon ? '<img width="16px" height="16px" src="' . $this->rowIcon . '" alt="">' : '';
             $metricsText = sprintf(Piwik::translate('RowEvolution_MetricsFor'), $this->dimension . ': ' . $icon . ' ' . $this->rowLabel);
             $popoverTitle = $icon . ' ' . $this->rowLabel;
         }
@@ -204,7 +204,6 @@ class RowEvolution
         $view->config->show_goals = false;
         $view->config->show_search = false;
         $view->config->show_all_views_icons = false;
-        $view->config->show_active_view_icon = false;
         $view->config->show_related_reports  = false;
         $view->config->show_series_picker    = false;
         $view->config->show_footer_message   = false;

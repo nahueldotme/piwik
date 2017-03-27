@@ -59,7 +59,7 @@ class FormSuperUser extends QuickForm2
             ));
 
         $professionalServicesNewsletter = Piwik::translate('Installation_ProfessionalServicesNewsletter',
-            array("<a href='http://piwik.org/consulting/?pk_medium=App_Newsletter_link&pk_source=Piwik_App&pk_campaign=App_Installation' style='color:#444;' rel='noreferrer' target='_blank'>", "</a>")
+            array("<a href='https://piwik.org/support/?pk_medium=App_Newsletter_link&pk_source=Piwik_App&pk_campaign=App_Installation' style='color:#444;' rel='noreferrer' target='_blank'>", "</a>")
         );
 
         $currentLanguage = StaticContainer::get('Piwik\Translation\Translator')->getCurrentLanguage();
@@ -69,7 +69,7 @@ class FormSuperUser extends QuickForm2
                 'content' => '&nbsp;&nbsp;' . $professionalServicesNewsletter,
             ));
 
-        $this->addElement('submit', 'submit', array('value' => Piwik::translate('General_Next') . ' »', 'class' => 'btn btn-lg'));
+        $this->addElement('submit', 'submit', array('value' => Piwik::translate('General_Next') . ' »', 'class' => 'btn'));
 
         // default values
         $this->addDataSource(new HTML_QuickForm2_DataSource_Array(array(

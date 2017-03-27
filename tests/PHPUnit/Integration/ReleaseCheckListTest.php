@@ -28,7 +28,7 @@ class ReleaseCheckListTest extends \PHPUnit_Framework_TestCase
 {
     private $globalConfig;
 
-    const MINIMUM_PHP_VERSION = '5.3.3';
+    const MINIMUM_PHP_VERSION = '5.5.9';
 
     public function setUp()
     {
@@ -56,6 +56,10 @@ class ReleaseCheckListTest extends \PHPUnit_Framework_TestCase
     public function test_icoFilesIconsShouldBeInPngFormat()
     {
         $files = Filesystem::globr(PIWIK_INCLUDE_PATH . '/plugins', '*.ico');
+
+        // filter favicon.ico as it may not be in PNG format which is fine
+        $files = array_filter($files, function($value) { return !preg_match('/favicon.ico/', $value); });
+
         $this->checkFilesAreInPngFormat($files);
         $files = Filesystem::globr(PIWIK_INCLUDE_PATH . '/core', '*.ico');
         $this->checkFilesAreInPngFormat($files);
@@ -89,6 +93,25 @@ class ReleaseCheckListTest extends \PHPUnit_Framework_TestCase
         $this->checkFilesAreInJpgFormat($files);
         $files = Filesystem::globr(PIWIK_INCLUDE_PATH . '/core', '*.jpeg');
         $this->checkFilesAreInJpgFormat($files);
+    }
+
+    public function test_screenshotsStoredInLfs()
+    {
+        $screenshots = Filesystem::globr(PIWIK_INCLUDE_PATH . '/tests/UI/expected-screenshots', '*.png');
+        $cleanPath   = function ($value) {
+            return str_replace(PIWIK_INCLUDE_PATH . '/', '', $value);
+        };
+        $screenshots = array_map($cleanPath, $screenshots);
+
+        $storedLfsFiles = explode("\n", `git lfs ls-files`);
+        $cleanRevision  = function ($value) {
+            $parts = explode(' - ', $value);
+            return array_pop($parts);
+        };
+        $storedLfsFiles = array_map($cleanRevision, $storedLfsFiles);
+
+        $diff = array_diff($screenshots, $storedLfsFiles);
+        $this->assertEmpty($diff, 'Some Screenshots are not stored in LFS: ' . implode("\n", $diff));
     }
 
     public function testCheckThatConfigurationValuesAreProductionValues()
@@ -392,7 +415,8 @@ class ReleaseCheckListTest extends \PHPUnit_Framework_TestCase
                 strpos($file, 'yuicompressor') !== false ||
                 strpos($file, '/libs/') !== false ||
                 (strpos($file, '/vendor') !== false && strpos($file, '/vendor/piwik') === false) ||
-                strpos($file, '/tmp/') !== false
+                strpos($file, '/tmp/') !== false ||
+                strpos($file, '/phantomjs/') !== false
             ) {
                 continue;
             }
@@ -435,9 +459,7 @@ class ReleaseCheckListTest extends \PHPUnit_Framework_TestCase
 
     public function test_piwikJs_minified_isUpToDate()
     {
-        Http::fetchRemoteFile('https://github.com/downloads/yui/yuicompressor/yuicompressor-2.4.7.zip', PIWIK_DOCUMENT_ROOT .'/tmp/yuicompressor.zip');
-        shell_exec('unzip -n '. PIWIK_DOCUMENT_ROOT .'/tmp/yuicompressor.zip');
-        shell_exec("sed '/<DEBUG>/,/<\/DEBUG>/d' < ". PIWIK_DOCUMENT_ROOT ."/js/piwik.js | sed 's/eval/replacedEvilString/' | java -jar yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar --type js --line-break 1000 | sed 's/replacedEvilString/eval/' | sed 's/^[/][*]/\/*!/' > " . PIWIK_DOCUMENT_ROOT ."/piwik-minified.js");
+        shell_exec("sed '/<DEBUG>/,/<\/DEBUG>/d' < ". PIWIK_DOCUMENT_ROOT ."/js/piwik.js | sed 's/eval/replacedEvilString/' | java -jar ". PIWIK_DOCUMENT_ROOT ."/tests/resources/yuicompressor/yuicompressor-2.4.7.jar --type js --line-break 1000 | sed 's/replacedEvilString/eval/' | sed 's/^[/][*]/\/*!/' > " . PIWIK_DOCUMENT_ROOT ."/piwik-minified.js");
 
         $this->assertFileEquals(PIWIK_DOCUMENT_ROOT . '/piwik-minified.js',
             PIWIK_DOCUMENT_ROOT . '/piwik.js',
@@ -776,7 +798,7 @@ class ReleaseCheckListTest extends \PHPUnit_Framework_TestCase
      */
     private function isFileBelongToTests($file)
     {
-        return stripos($file, "/tests/") !== false;
+        return stripos($file, "/tests/") !== false || stripos($file, "/phantomjs/") !== false;
     }
 
     /**

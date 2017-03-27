@@ -19,6 +19,7 @@ var PageRenderer = function (baseUrl) {
     this.aborted = false;
     this.baseUrl = baseUrl;
     this.currentFrame = null;
+    this.frameOffset = null;
 
     this.defaultWaitTime = 1000;
     this._isLoading = false;
@@ -98,6 +99,14 @@ PageRenderer.prototype.mouseup = function (selector, waitTime) {
     this.queuedEvents.push([this._mouseup, waitTime, selector]);
 };
 
+PageRenderer.prototype.selectFrame = function (frameNameOrPosition, waitTime) {
+    this.queuedEvents.push([this._selectFrame, waitTime, frameNameOrPosition]);
+};
+
+PageRenderer.prototype.selectMainFrame = function (waitTime) {
+    this.queuedEvents.push([this._selectMainFrame, waitTime]);
+};
+
 PageRenderer.prototype.reload = function (waitTime) {
     this.queuedEvents.push([this._reload, waitTime]);
 };
@@ -108,6 +117,12 @@ PageRenderer.prototype.load = function (url, waitTime) {
 
 PageRenderer.prototype.evaluate = function (impl, waitTime) {
     this.queuedEvents.push([this._evaluate, waitTime, impl]);
+};
+
+// like .evaluate() but doesn't call `impl` in context of the webpage. Useful if you want to change eg a testEnvironment
+// before a click. Makes sure this callback `impl` will be executed just before the next action instead of immediately
+PageRenderer.prototype.execCallback = function (callback, waitTime) {
+    this.queuedEvents.push([this._execCallback, waitTime, callback]);
 };
 
 PageRenderer.prototype.downloadLink = function (selector, waitTime) {
@@ -221,6 +236,41 @@ PageRenderer.prototype._mouseup = function (selector, callback) {
     callback();
 };
 
+PageRenderer.prototype._selectFrame = function (frameNameOrPosition, callback) {
+    if (!this.frameOffset) {
+        // case when selecting a frame within a frame is currently not supported
+        // and we'd need to make sure to not use jQuery in that case as it is likely not available in that frame
+        // within the frame :)
+        this.frameOffset = this.webpage.evaluate(function (frameName) {
+            if ('undefined' === typeof window.jQuery) {
+                return null;
+            }
+            // todo eventually we should also try to find frame by position
+            var frame = window.jQuery('iframe[name=' + frameName + ']');
+
+            if (!frame.size()) {
+                frame = window.jQuery('iframe[id=' + frameName + ']');
+            }
+            if (frame.size()) {
+                return frame.offset();
+            }
+
+            return null;
+        }, frameNameOrPosition);
+    }
+
+    this.webpage.switchToFrame(frameNameOrPosition);
+    this.wait(100);
+    callback();
+};
+
+PageRenderer.prototype._selectMainFrame = function (callback) {
+    this.frameOffset = null;
+    this.webpage.switchToMainFrame();
+    this.wait(100);
+    callback();
+};
+
 PageRenderer.prototype._reload = function (callback) {
     this.webpage.reload();
 
@@ -241,12 +291,24 @@ PageRenderer.prototype._load = function (url, callback) {
     var self = this;
     this.webpage.open(url, function (status) {
 
+        if (VERBOSE) {
+            self._logMessage('Webpage open event');
+        }
+
         self._isInitializing = false;
+        self._isLoading = false;
 
         this.evaluate(function () {
             var $ = window.jQuery;
+
             if ($) {
                 $('html').addClass('uiTest');
+                $.fx.off = true;
+
+                var css = document.createElement('style');
+                css.type = 'text/css';
+                css.innerHTML = '* { -webkit-transition: none !important; transition: none !important; -webkit-animation: none !important; animation: none !important; }';
+                document.body.appendChild(css);
             }
         });
 
@@ -262,6 +324,11 @@ PageRenderer.prototype._evaluate = function (impl, callback) {
         eval("(" + js + ")();");
     }, impl.toString());
 
+    callback();
+};
+
+PageRenderer.prototype._execCallback = function (actualCallback, callback) {
+    actualCallback();
     callback();
 };
 
@@ -294,7 +361,9 @@ PageRenderer.prototype._getPosition = function (selector) {
         return selector;
     }
 
-    var pos = this.webpage.evaluate(function (selector) {
+    var self = this;
+
+    var pos = this.webpage.evaluate(function (selector, frameOffset) {
         var element = window.jQuery(selector),
             offset = element.offset();
 
@@ -308,11 +377,20 @@ PageRenderer.prototype._getPosition = function (selector) {
             return null;
         }
 
+        if (frameOffset) {
+            if (frameOffset.top) {
+                offset.top += frameOffset.top;
+            }
+            if (frameOffset.left) {
+                offset.left += frameOffset.left;
+            }
+        }
+
         return {
             x: offset.left + element.width() / 2,
             y: offset.top + element.height() / 2
         };
-    }, selector);
+    }, selector, self.frameOffset);
 
     return pos;
 };
@@ -338,7 +416,7 @@ PageRenderer.prototype.capture = function (outputPath, callback, selector) {
             self.abort();
 
             callback(new Error("Screenshot load timeout. Details:\n" + timeoutDetails));
-        }, 180 * 1000);
+        }, 240 * 1000);
 
     if (this.webpage === null) {
         this._recreateWebPage();
@@ -354,9 +432,15 @@ PageRenderer.prototype.capture = function (outputPath, callback, selector) {
             return;
         }
 
+        if (self.aborted) {
+            return false;
+        }
+
         var result = page.evaluate(function(selector) {
-            var docWidth = $(document).width(),
-                docHeight = $(document).height();
+            window.jQuery('html').addClass('uiTest');
+
+            var docWidth = window.jQuery(document).width(),
+                docHeight = window.jQuery(document).height();
 
             function isInvalidBoundingRect (rect) {
                 return !rect.width || !rect.height
@@ -431,11 +515,12 @@ PageRenderer.prototype.capture = function (outputPath, callback, selector) {
     }
 
     this._executeEvents(events, function () {
+
+        clearTimeout(timeout);
+
         if (self.aborted) {
             return;
         }
-
-        clearTimeout(timeout);
 
         try {
             if (outputPath) {
@@ -444,26 +529,42 @@ PageRenderer.prototype.capture = function (outputPath, callback, selector) {
 
                 // _setCorrectViewportSize might cause a re-render. We should wait for a while for the re-render to
                 // finish before capturing a screenshot to avoid possible random failures.
-                var timeInMsToWaitForReRenderToFinish = 400;
+                var timeInMsToWaitForReRenderToFinish = 500;
                 setTimeout(function () {
                     var previousClipRect = self.webpage.clipRect;
 
-                    setClipRect(self.webpage, selector);
+                    try {
+                        if (self.aborted) {
+                            return;
+                        }
 
-                    self.webpage.render(outputPath);
-                    self._viewportSizeOverride = null;
-                    self.webpage.clipRect = previousClipRect;
+                        setClipRect(self.webpage, selector);
 
-                    callback();
+                        self.webpage.render(outputPath);
+                        self._viewportSizeOverride = null;
+                        self.webpage.clipRect = previousClipRect;
+
+                        if (!self.aborted) {
+                            callback();
+                        }
+
+                    } catch (e) {
+                        if (previousClipRect) {
+                            self.webpage.clipRect = previousClipRect;
+                        }
+                    }
 
                 }, timeInMsToWaitForReRenderToFinish);
-                
+
             } else {
                 callback();
             }
-            
+
         } catch (e) {
-            self.webpage.clipRect = previousClipRect;
+
+            if (self.aborted) {
+                return;
+            }
 
             callback(e);
         }
@@ -479,7 +580,7 @@ PageRenderer.prototype._executeEvents = function (events, callback, i) {
     i = i || 0;
 
     var evt = events[i];
-    if (!evt) {
+    if (!evt || this.aborted) {
         callback();
         return;
     }
@@ -581,6 +682,10 @@ PageRenderer.prototype._getImageLoadingCount = function () {
 
 PageRenderer.prototype._waitForNextEvent = function (events, callback, i, waitTime) {
 
+    if (this.aborted) {
+        return;
+    }
+
     function hasPendingResources(self)
     {
         function isEmpty(obj) {
@@ -608,6 +713,12 @@ PageRenderer.prototype._waitForNextEvent = function (events, callback, i, waitTi
     var self = this;
 
     setTimeout(function () {
+        if (self.aborted) {
+            // call execute events one more time so it can trigger its callback and finish the test
+            self._executeEvents(events, callback, i + 1);
+            return;
+        }
+
         if (!self._isLoading && !self._isInitializing && !self._isNavigationRequested && !hasPendingResources(self)) {
             self._executeEvents(events, callback, i + 1);
         } else {
@@ -739,21 +850,36 @@ PageRenderer.prototype._setupWebpageEvents = function () {
     };
 
     this.webpage.onLoadStarted = function () {
+        if (VERBOSE) {
+            self._logMessage('onLoadStarted');
+        }
+
         self._isInitializing = false;
         self._isLoading = true;
     };
 
     this.webpage.onPageCreated = function onPageCreated(popupPage) {
+        if (VERBOSE) {
+            self._logMessage('onPageCreated');
+        }
+
         popupPage.onLoadFinished = function onLoadFinished() {
             self._isNavigationRequested = false;
         };
     };
 
     this.webpage.onUrlChanged = function onUrlChanged(url) {
+        if (VERBOSE) {
+            self._logMessage('onUrlChanged: ' + url);
+        }
         self._isNavigationRequested = false;
     };
 
     this.webpage.onNavigationRequested = function (url, type, willNavigate, isMainFrame) {
+        if (VERBOSE) {
+            self._logMessage('onNavigationRequested: ' + url);
+        }
+
         self._isInitializing = false;
 
         if (isMainFrame && self._requestedUrl !== url && willNavigate) {
@@ -778,6 +904,8 @@ PageRenderer.prototype._setupWebpageEvents = function () {
     this.webpage.onLoadFinished = function (status) {
         if (status !== 'success' && VERBOSE) {
             self._logMessage('Page did not load successfully (it could be on purpose if a tests wants to test this behaviour): ' + status);
+        } else if (VERBOSE) {
+            self._logMessage('onLoadFinished: ' + status);
         }
 
         self._isInitializing = false;

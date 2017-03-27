@@ -11,10 +11,10 @@ namespace Piwik\Plugins\CorePluginsAdmin;
 use Piwik\Config;
 use Piwik\Plugin;
 
-class CorePluginsAdmin extends \Piwik\Plugin
+class CorePluginsAdmin extends Plugin
 {
     /**
-     * @see Piwik\Plugin::registerEvents
+     * @see Plugin::registerEvents
      */
     public function registerEvents()
     {
@@ -27,14 +27,8 @@ class CorePluginsAdmin extends \Piwik\Plugin
 
     public function getStylesheetFiles(&$stylesheets)
     {
-        $stylesheets[] = "plugins/CorePluginsAdmin/stylesheets/marketplace.less";
         $stylesheets[] = "plugins/CorePluginsAdmin/stylesheets/plugins_admin.less";
-        $stylesheets[] = "plugins/CorePluginsAdmin/stylesheets/plugin-details.less";
-    }
-
-    public static function isMarketplaceEnabled()
-    {
-        return (bool) Config::getInstance()->General['enable_marketplace'];
+        $stylesheets[] = "plugins/CorePluginsAdmin/angularjs/plugin-settings/plugin-settings.directive.less";
     }
 
     public static function isPluginsAdminEnabled()
@@ -42,19 +36,24 @@ class CorePluginsAdmin extends \Piwik\Plugin
         return (bool) Config::getInstance()->General['enable_plugins_admin'];
     }
 
+    public static function isPluginUploadEnabled()
+    {
+        return (bool) Config::getInstance()->General['enable_plugin_upload'];
+    }
+
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "libs/bower_components/jQuery.dotdotdot/src/js/jquery.dotdotdot.min.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/popover.js";
-        $jsFiles[] = "plugins/CorePluginsAdmin/javascripts/marketplace.js";
-        $jsFiles[] = "plugins/CorePluginsAdmin/javascripts/pluginOverview.js";
-        $jsFiles[] = "plugins/CorePluginsAdmin/javascripts/pluginExtend.js";
-        $jsFiles[] = "plugins/CorePluginsAdmin/javascripts/plugins.js";
     }
 
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'CorePluginsAdmin_NoZipFileSelected';
+        $translations[] = 'CorePluginsAdmin_NoPluginSettings';
+        $translations[] = 'CoreAdminHome_PluginSettingsIntro';
+        $translations[] = 'CoreAdminHome_PluginSettingsSaveSuccess';
+        $translations[] = 'General_Save';
     }
 
 }

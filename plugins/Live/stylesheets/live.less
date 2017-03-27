@@ -9,6 +9,13 @@
    }
 }
 
+.theWidgetContent > h2:first-child {
+  color: @theme-color-headline-alternative !important;
+  .title {
+    color: @theme-color-headline-alternative !important;
+  }
+}
+
 #visitsLive .settings {
   border-bottom: 1px solid @color-silver-l90;
 }
@@ -18,7 +25,7 @@
 }
 
 #visitsLive .datetime {
-    background: #E4E2D7;
+    background: @theme-color-background-base;
     border-top: 1px solid #d3d1c5;
     margin: 0;
     line-height: 20px;
@@ -26,7 +33,7 @@
 }
 
 #visitsLive .country {
-    background: @theme-color-background-base url(plugins/CoreHome/images/bullet1.gif) no-repeat scroll 0 0;
+    background: @theme-color-background-base url(plugins/CoreHome/images/bullet1.png) no-repeat scroll 0 0;
 }
 
 #visitsLive .referrer {
@@ -69,9 +76,6 @@
     .dataTableFeatures {
       border-bottom: 0px;
     }
-    .expandDataTableFooterDrawer {
-      display: none;
-    }
   }
 }
 
@@ -103,7 +107,7 @@ ol.visitorLog {
 }
 
 ol.visitorLog li {
-    margin-bottom: 4px;
+    margin-bottom: 7px;
 }
 
 #visitsLive img {
@@ -148,7 +152,7 @@ ol.visitorLog li {
     border-radius: 3px;
     padding: 2px;
     display: block;
-    margin: 5px;
+    margin: 0px 5px 0px 5px;
     float: left;
 }
 
@@ -179,7 +183,6 @@ ol.visitorLog li {
 }
 
 .simple-realtime-metric {
-    font-style: italic;
     font-weight: bold;
     color: #333;
 }
@@ -226,7 +229,8 @@ ol.visitorLog p {
 }
 
 .visitor-log-page-list {
-    position:relative;
+  position:relative;
+  margin-top: 7px;
 }
 
 a.visitor-log-visitor-profile-link {
@@ -289,6 +293,8 @@ a.visitor-log-visitor-profile-link {
 
 .visitorLogIcons .visitorLogIconWithDetails>img {
     margin: auto 5px auto 0;
+    width: 16px;
+    height: 16px;
 }
 
 .visitorLogIcons>span.visitorRank>img {

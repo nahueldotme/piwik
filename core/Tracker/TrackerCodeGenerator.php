@@ -12,6 +12,7 @@ use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Plugins\CustomVariables\CustomVariables;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
+use Piwik\View;
 
 /**
  * Generates the Javascript code to be inserted on every page of the website to track.
@@ -30,6 +31,7 @@ class TrackerCodeGenerator
      * @param string $customCampaignKeywordParam
      * @param bool $doNotTrack
      * @param bool $disableCookies
+     * @param bool $trackNoScript
      * @return string Javascript code.
      */
     public function generate(
@@ -43,11 +45,12 @@ class TrackerCodeGenerator
         $customCampaignNameQueryParam = null,
         $customCampaignKeywordParam = null,
         $doNotTrack = false,
-        $disableCookies = false
+        $disableCookies = false,
+        $trackNoScript = false,
+        $crossDomain = false
     ) {
         // changes made to this code should be mirrored in plugins/CoreAdminHome/javascripts/jsTrackingGenerator.js var generateJsCode
-        $jsCode = file_get_contents(PIWIK_INCLUDE_PATH . "/plugins/Morpheus/templates/javascriptCode.tpl");
-        $jsCode = htmlentities($jsCode);
+
         if (substr($piwikUrl, 0, 4) !== 'http') {
             $piwikUrl = 'http://' . $piwikUrl;
         }
@@ -60,9 +63,18 @@ class TrackerCodeGenerator
         if ($groupPageTitlesByDomain) {
             $options .= '  _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);' . "\n";
         }
+        if ($crossDomain) {
+            // When enabling cross domain, we also need to call `setDomains`
+            $mergeAliasUrls = true;
+        }
         if ($mergeSubdomains || $mergeAliasUrls) {
             $options .= $this->getJavascriptTagOptions($idSite, $mergeSubdomains, $mergeAliasUrls);
         }
+
+        if ($crossDomain) {
+            $options .= '  _paq.push(["enableCrossDomainLinking"]);' . "\n";
+        }
+
         $maxCustomVars = CustomVariables::getNumUsableCustomVariables();
 
         if ($visitorCustomVariables && count($visitorCustomVariables) > 0) {
@@ -119,7 +131,9 @@ class TrackerCodeGenerator
             'piwikUrl'                => Common::sanitizeInputValue($piwikUrl),
             'options'                 => $options,
             'optionsBeforeTrackerUrl' => $optionsBeforeTrackerUrl,
-            'protocol'                => '//'
+            'protocol'                => '//',
+            'loadAsync'               => true,
+            'trackNoScript'           => $trackNoScript
         );
         $parameters = compact('mergeSubdomains', 'groupPageTitlesByDomain', 'mergeAliasUrls', 'visitorCustomVariables',
             'pageCustomVariables', 'customCampaignNameQueryParam', 'customCampaignKeywordParam',
@@ -141,6 +155,7 @@ class TrackerCodeGenerator
          *                                        the JavaScript tracker inside of anonymous function before
          *                                        adding setTrackerUrl into paq.
          *                         - **protocol**: Piwik url protocol.
+         *                         - **loadAsync**: boolean whether piwik.js should be loaded syncronous or asynchronous
          *
          *                         The **httpsPiwikUrl** element can be set if the HTTPS
          *                         domain is different from the normal domain.
@@ -155,6 +170,13 @@ class TrackerCodeGenerator
             $codeImpl['httpsPiwikUrl'] = rtrim($codeImpl['httpsPiwikUrl'], "/");
         }
         $codeImpl = array('setTrackerUrl' => htmlentities($setTrackerUrl)) + $codeImpl;
+
+        $view = new View('@Morpheus/javascriptCode');
+        $view->disableCacheBuster();
+        $view->loadAsync = $codeImpl['loadAsync'];
+        $view->trackNoScript = $codeImpl['trackNoScript'];
+        $jsCode = $view->render();
+        $jsCode = htmlentities($jsCode);
 
         foreach ($codeImpl as $keyToReplace => $replaceWith) {
             $jsCode = str_replace('{$' . $keyToReplace . '}', $replaceWith, $jsCode);

@@ -273,12 +273,6 @@ class Common
             return $value;
         } elseif (is_string($value)) {
             $value = self::sanitizeString($value);
-
-            if (!$alreadyStripslashed) {
-                // a JSON array was already stripslashed, don't do it again for each value
-
-                $value = self::undoMagicQuotes($value);
-            }
         } elseif (is_array($value)) {
             foreach (array_keys($value) as $key) {
                 $newKey = $key;
@@ -379,27 +373,6 @@ class Common
     }
 
     /**
-     * Undo the damage caused by magic_quotes; deprecated in php 5.3 but not removed until php 5.4
-     *
-     * @param string
-     * @return string  modified or not
-     */
-    private static function undoMagicQuotes($value)
-    {
-        static $shouldUndo;
-
-        if (!isset($shouldUndo)) {
-            $shouldUndo = version_compare(PHP_VERSION, '5.4', '<') && get_magic_quotes_gpc();
-        }
-
-        if ($shouldUndo) {
-            $value = stripslashes($value);
-        }
-
-        return $value;
-    }
-
-    /**
      * @param string $value
      * @return string Line breaks and line carriage removed
      */
@@ -475,7 +448,7 @@ class Common
 
         // we deal w/ json differently
         if ($varType == 'json') {
-            $value = self::undoMagicQuotes($requestArrayToUse[$varName]);
+            $value = $requestArrayToUse[$varName];
             $value = json_decode($value, $assoc = true);
             return self::sanitizeInputValues($value, $alreadyStripslashed = true);
         }
@@ -531,17 +504,54 @@ class Common
      */
 
     /**
+     * Generates a random integer
+     *
+     * @param int $min
+     * @param null|int $max Defaults to max int value
+     * @return int|null
+     */
+    public static function getRandomInt($min = 0, $max = null)
+    {
+        $rand = null;
+
+        if (function_exists('random_int')) {
+            try {
+                if (!isset($max)) {
+                    $max = PHP_INT_MAX;
+                }
+                $rand = random_int($min, $max);
+            } catch (Exception $e) {
+                // If none of the crypto sources are available, an Exception will be thrown.
+                $rand = null;
+            }
+        }
+
+        if (!isset($rand)) {
+            if (function_exists('mt_rand')) {
+                if (!isset($max)) {
+                    $max = mt_getrandmax();
+                }
+                $rand = mt_rand($min, $max);
+            } else {
+                if (!isset($max)) {
+                    $max = getrandmax();
+                }
+
+                $rand = rand($min, $max);
+            }
+        }
+
+        return $rand;
+    }
+
+    /**
      * Returns a 32 characters long uniq ID
      *
      * @return string 32 chars
      */
     public static function generateUniqId()
     {
-        if (function_exists('mt_rand')) {
-            $rand = mt_rand();
-        } else {
-            $rand = rand();
-        }
+        $rand = self::getRandomInt();
 
         return md5(uniqid($rand, true));
     }
@@ -585,7 +595,7 @@ class Common
         $str   = '';
 
         for ($i = 0; $i < $length; $i++) {
-            $rand_key = mt_rand(0, strlen($chars) - 1);
+            $rand_key = self::getRandomInt(0, strlen($chars) - 1);
             $str .= substr($chars, $rand_key, 1);
         }
 

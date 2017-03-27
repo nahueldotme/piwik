@@ -124,7 +124,7 @@ class Visitor implements VisitorInterface
 
     /**
      * Removes fields that are not meant to be displayed (md5 config hash)
-     * Or that the user should only access if he is Super User or admin (cookie, IP)
+     * Or that the user should only access if they are Super User or admin (cookie, IP)
      *
      * @param array $visitorDetails
      * @return array
@@ -158,7 +158,7 @@ class Visitor implements VisitorInterface
         //       ==> also update API/API.php getSuggestedValuesForSegment(), the $segmentsNeedActionsInfo array
 
         // flatten visit custom variables
-        if (!empty($visitorDetailsArray['customVariables']) 
+        if (!empty($visitorDetailsArray['customVariables'])
             && is_array($visitorDetailsArray['customVariables'])) {
             foreach ($visitorDetailsArray['customVariables'] as $thisCustomVar) {
                 $visitorDetailsArray = array_merge($visitorDetailsArray, $thisCustomVar);
@@ -251,7 +251,7 @@ class Visitor implements VisitorInterface
      * @param $timezone
      * @return array
      */
-    public static function enrichVisitorArrayWithActions($visitorDetailsArray, $actionsLimit, $timezone)
+    public static function enrichVisitorArrayWithActions($visitorDetailsArray, $actionsLimit, $idSite, $timezone)
     {
         $idVisit = $visitorDetailsArray['idVisit'];
 
@@ -306,6 +306,7 @@ class Visitor implements VisitorInterface
                     $actionDetail['eventValue'] = round($actionDetail['custom_float'], self::EVENT_VALUE_PRECISION);
                 }
             } elseif ($actionDetail['custom_float'] > 0) {
+                $actionDetail['generationTimeMilliseconds'] = $actionDetail['custom_float'];
                 $actionDetail['generationTime'] = $formatter->getPrettyTimeFromSeconds($actionDetail['custom_float'] / 1000, true);
             }
             unset($actionDetail['custom_float']);
@@ -314,6 +315,9 @@ class Visitor implements VisitorInterface
                 unset($actionDetail['eventCategory']);
                 unset($actionDetail['eventAction']);
             }
+
+            $actionDetail['interactionPosition'] = $actionDetail['interaction_position'];
+            unset($actionDetail['interaction_position']);
 
             // Reconstruct url from prefix
             $url = Tracker\PageUrl::reconstructNormalizedUrl($actionDetail['url'], $actionDetail['url_prefix']);
@@ -325,6 +329,15 @@ class Visitor implements VisitorInterface
 
         // If the visitor converted a goal, we shall select all Goals
         $goalDetails = $model->queryGoalConversionsForVisit($idVisit, $actionsLimit);
+
+        $ecommerceMetrics = $model->queryEcommerceConversionsVisitorLifeTimeMetricsForVisitor($idSite, $visitorDetailsArray['visitorId']);
+        $visitorDetailsArray['totalEcommerceRevenue'] = $ecommerceMetrics['totalEcommerceRevenue'];
+        $visitorDetailsArray['totalEcommerceConversions'] = $ecommerceMetrics['totalEcommerceConversions'];
+        $visitorDetailsArray['totalEcommerceItems'] = $ecommerceMetrics['totalEcommerceItems'];
+
+        $visitorDetailsArray['totalAbandonedCartsRevenue'] = $ecommerceMetrics['totalAbandonedCartsRevenue'];
+        $visitorDetailsArray['totalAbandonedCarts'] = $ecommerceMetrics['totalAbandonedCarts'];
+        $visitorDetailsArray['totalAbandonedCartsItems'] = $ecommerceMetrics['totalAbandonedCartsItems'];
 
         $ecommerceDetails = $model->queryEcommerceConversionsForVisit($idVisit, $actionsLimit);
         foreach ($ecommerceDetails as &$ecommerceDetail) {
@@ -413,7 +426,7 @@ class Visitor implements VisitorInterface
                     break;
                 case Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER:
                 case Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART:
-                    $details['icon'] = 'plugins/Morpheus/images/' . $details['type'] . '.gif';
+                    $details['icon'] = 'plugins/Morpheus/images/' . $details['type'] . '.png';
                     break;
                 case Action::TYPE_DOWNLOAD:
                     $details['type'] = 'download';
@@ -421,7 +434,7 @@ class Visitor implements VisitorInterface
                     break;
                 case Action::TYPE_OUTLINK:
                     $details['type'] = 'outlink';
-                    $details['icon'] = 'plugins/Morpheus/images/link.gif';
+                    $details['icon'] = 'plugins/Morpheus/images/link.png';
                     break;
                 case Action::TYPE_SITE_SEARCH:
                     $details['type'] = 'search';

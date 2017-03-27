@@ -51,7 +51,10 @@
             url += '&showMap=0';
         }
 
-        Piwik_Popover.createPopupAndLoadUrl(url, _pk_translate('Live_VisitorProfile'), 'visitor-profile-popup');
+        var ajaxRequest = new ajaxHelper();
+        ajaxRequest.removeDefaultParameter('segment');
+
+        Piwik_Popover.createPopupAndLoadUrl(url, _pk_translate('Live_VisitorProfile'), 'visitor-profile-popup', ajaxRequest);
     };
 
     $.extend(VisitorProfileControl.prototype, UIControl.prototype, {
@@ -70,6 +73,9 @@
 
             $element.on('click', '.visitor-profile-close', function (e) {
                 e.preventDefault();
+                try {
+                    $element.tooltip('destroy');
+                } catch (e) {}
                 Piwik_Popover.close();
                 return false;
             });
@@ -121,16 +127,6 @@
                 var url = $(this).attr('href');
                 if (url.indexOf('&token_auth=') == -1) {
                     $(this).attr('href', url + '&token_auth=' + piwik.token_auth);
-                }
-            });
-
-            // on hover, show export link (chrome won't let me do this via css :( )
-            $element.on('mouseenter mouseleave', '.visitor-profile-id', function (e) {
-                var $exportLink = $(this).find('.visitor-profile-export');
-                if ($exportLink.css('visibility') == 'hidden') {
-                    $exportLink.css('visibility', 'visible');
-                } else {
-                    $exportLink.css('visibility', 'hidden');
                 }
             });
 

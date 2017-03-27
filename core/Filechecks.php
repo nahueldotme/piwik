@@ -103,69 +103,6 @@ class Filechecks
     }
 
     /**
-     * Get file integrity information (in PIWIK_INCLUDE_PATH).
-     *
-     * @return array(bool, string, ...) Return code (true/false), followed by zero or more error messages
-     */
-    public static function getFileIntegrityInformation()
-    {
-        $messages = array();
-        $messages[] = true;
-
-        $manifest = PIWIK_INCLUDE_PATH . '/config/manifest.inc.php';
-
-        if (file_exists($manifest)) {
-            require_once $manifest;
-        }
-
-        if (!class_exists('Piwik\\Manifest')) {
-            $messages[] = Piwik::translate('General_WarningFileIntegrityNoManifest')
-                        . ' '
-                        . Piwik::translate('General_WarningFileIntegrityNoManifestDeployingFromGit');
-
-            return $messages;
-        }
-
-        $files = \Piwik\Manifest::$files;
-
-        $hasMd5file = function_exists('md5_file');
-        $hasMd5 = function_exists('md5');
-        foreach ($files as $path => $props) {
-            $file = PIWIK_INCLUDE_PATH . '/' . $path;
-
-            if (!file_exists($file) || !is_readable($file)) {
-                $messages[] = Piwik::translate('General_ExceptionMissingFile', $file);
-            } elseif (filesize($file) != $props[0]) {
-                if (!$hasMd5 || in_array(substr($path, -4), array('.gif', '.ico', '.jpg', '.png', '.swf'))) {
-                    // files that contain binary data (e.g., images) must match the file size
-                    $messages[] = Piwik::translate('General_ExceptionFilesizeMismatch', array($file, $props[0], filesize($file)));
-                } else {
-                    // convert end-of-line characters and re-test text files
-                    $content = @file_get_contents($file);
-                    $content = str_replace("\r\n", "\n", $content);
-                    if ((strlen($content) != $props[0])
-                        || (@md5($content) !== $props[1])
-                    ) {
-                        $messages[] = Piwik::translate('General_ExceptionFilesizeMismatch', array($file, $props[0], filesize($file)));
-                    }
-                }
-            } elseif ($hasMd5file && (@md5_file($file) !== $props[1])) {
-                $messages[] = Piwik::translate('General_ExceptionFileIntegrity', $file);
-            }
-        }
-
-        if (count($messages) > 1) {
-            $messages[0] = false;
-        }
-
-        if (!$hasMd5file) {
-            $messages[] = Piwik::translate('General_WarningFileIntegrityNoMd5file');
-        }
-
-        return $messages;
-    }
-
-    /**
      * Returns the help message when the auto update can't run because of missing permissions
      *
      * @return string
@@ -265,12 +202,22 @@ class Filechecks
             return '';
         }
 
-        $group = posix_getgrgid($stat[5]);
-        $group = $group['name'];
+        if (function_exists('posix_getgrgid')) {
+            $group = posix_getgrgid($stat[5]);
+            $group = $group['name'];
+        } else {
+            return '';
+        }
 
-        $user = posix_getpwuid($stat[4]);
-        $user = $user['name'];
+        if (function_exists('posix_getpwuid')) {
+            $user = posix_getpwuid($stat[4]);
+            $user = $user['name'];
+        } else {
+            return '';
+        }
 
         return "$user:$group";
     }
+
+
 }

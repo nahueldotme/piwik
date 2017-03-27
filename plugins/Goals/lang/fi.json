@@ -10,7 +10,7 @@
         "BestKeywords": "Parhaat hakusanat ovat:",
         "BestReferrers": "Parhaat verkkosivuviittaajat ovat:",
         "CaseSensitive": "Kokoherkkä",
-        "ChooseGoal": "Valitse tavoite",
+        "CategoryTextReferrers_Referrers": "Viittaajat",
         "ClickOutlink": "Ulos lähtevän linkin painaminen",
         "SendEvent": "Lähetä tapahtuma",
         "ColumnAverageOrderRevenueDocumentation": "Keskimääräinen tilauksen arvo (AOV) on tilausten arvon summa jaettuna tilausten lukumäärällä.",
@@ -33,7 +33,7 @@
         "Conversions": "%s siirtymää",
         "ConversionsOverview": "Siirtymien yleiskatsaus",
         "ConversionsOverviewBy": "Tavoitteiden saavuttamisen yleiskatsaus vierailun tyypin mukaan",
-        "DaysToConv": "Päiviä tavoiteen saavuttamiseen",
+        "DaysToConv": "Päiviä tavoitteen saavuttamiseen",
         "DefaultGoalConvertedOncePerVisit": "(oletus) tavoitteen voi saavuttaa vain kerran per käynti",
         "DefaultRevenue": "Tavoitteen oletustuotto on",
         "DefaultRevenueHelp": "Esimerkiksi lähetetyn \"Ota yhteyttä\"-lomakkeen arvo voi olla keskimäärin 10€. Piwik auttaa ymmärtämään, miten eri segmentit tuovat rahaa.",
@@ -68,8 +68,6 @@
         "NewGoalIntro": "Konversion seuranta on yksi tehokkaimmista tavoista mitata ja kehittää yrityksesi päämääriä.",
         "NewVisitorsConversionRateIs": "Uusien kävijöiden siirtymäaste on %s",
         "Optional": "(vapaavalintainen)",
-        "OverallConversionRate": "%s yleinen siirtymisaste (käynti jossa täytetään tavoite)",
-        "OverallRevenue": "%s yleistuotto",
         "PageTitle": "Sivun otsikko",
         "Pattern": "Malli",
         "ProductCategory": "Tuotteen kategoria",
@@ -86,7 +84,6 @@
         "VisitUrl": "Vierailee annetussa osoitteessa (sivu tai ryhmä sivuja)",
         "WhenVisitors": "kun kävijöitä",
         "WhereThe": "jossa",
-        "WhereVisitedPageManuallyCallsJavascriptTrackerLearnMore": "jossa sivu sisältää JavaScript-kutsun metodille 'trackGoal' (%1$slue lisää%2$s)",
         "YouCanEnableEcommerceReports": "Voit ottaa käyttöön %1$s tälle sivustolle sivulla %2$s."
     }
 }

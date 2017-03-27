@@ -1,6 +1,5 @@
 {
     "ScheduledReports": {
-        "AggregateReportsFormat": "(वैकल्पिक) प्रदर्शन विकल्प",
         "AggregateReportsFormat_GraphsOnly": "रेखांकन सिर्फ (कोई रिपोर्ट तालिकाएँ नहीं ) प्रदर्शित करें",
         "AggregateReportsFormat_TablesAndGraphs": "सभी रिपोर्टों के लिए रिपोर्ट तालिकाएँ और रेखांकन प्रदर्शित",
         "AggregateReportsFormat_TablesOnly": "(डिफ़ॉल्ट) प्रदर्शन की रिपोर्ट तालिकाएँ(केवल प्रमुख मैट्रिक का रेखाचित्र)",
@@ -23,7 +22,6 @@
         "NoRecipients": "इस रिपोर्ट में कोई प्राप्तकर्ता नहीं हैं",
         "Pagination": "%1$s का %2$s पृष्ठ",
         "PiwikReports": "Piwik प्रतिवेदन",
-        "PleaseFindAttachedFile": "संलग्न फाइल में %2$s के लिए अपने %1$s रिपोर्ट मिल दें",
         "PleaseFindBelow": "%2$s के लिए अपने %1$s रिपोर्ट के नीचे खोजे .",
         "ReportFormat": "प्रतिवेदन प्रारूप",
         "ReportIncludeNWebsites": "रिपोर्ट में कम से कम एक यात्रा (वेबसाइटों से %sवर्तमान में उपलब्ध) है कि सभी वेबसाइटों के मुख्य मैट्रिक्स शामिल होंगे.",

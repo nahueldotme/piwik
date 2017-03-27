@@ -19,19 +19,19 @@
             {% if widgetizedLink is defined %}<a class="visitor-profile-widget-link" href="{{ widgetizedLink }}" target="_blank" title="{{ 'Widgetize_OpenInNewWindow'|translate }} - {{ 'Live_VisitorProfile'|translate }} {{ 'General_Id'|translate|upper }} {{ visitData.visitorId }}">{% endif %}
                 <strong>{{ visitData.visitorId }}</strong>
             {% if widgetizedLink is defined %}</a>{% endif %}
-            <a class="visitor-profile-export" href="{{ exportLink }}" target="_blank" title="{{ 'General_ExportThisReport'|translate }}" style="visibility:hidden">
-                <img src="plugins/Morpheus/images/export.png"/>
+            <a class="visitor-profile-export" href="{{ exportLink }}" target="_blank" title="{{ 'General_ExportThisReport'|translate }}">
+                <span class="icon-export"></span>
             </a>
         </li>
         <li>
             {% if visitData.browserName is defined %}
             <div class="visitor-profile-browser" title="{% if visitData.plugins is not defined %}{{ visitData.browser }}{% elseif visitData.plugins %}{{ 'DevicePlugins_BrowserWithPluginsEnabled'|translate(visitData.browser, visitData.plugins) }}{% else %}{{ 'DevicePlugins_BrowserWithNoPluginsEnabled'|translate(visitData.browser) }}{% endif %}">
-                {% if visitData.browserIcon is defined %}<img src="{{ visitData.browserIcon }}"/>{% endif %}<span>{{ visitData.browserName|split(' ')[0] }}</span>
+                {% if visitData.browserIcon is defined %}<img src="{{ visitData.browserIcon }}" width="16px" height="16px"/>{% endif %}<span>{{ visitData.browserName|split(' ')[0] }}</span>
             </div>
             {% endif %}
 
             <div class="visitor-profile-os">
-                {% if visitData.operatingSystemIcon is defined %}<img src="{{ visitData.operatingSystemIcon }}"/>{% endif %}{% if visitData.operatingSystem is defined %}<span>{{ visitData.operatingSystem }}</span>{% endif %}
+                {% if visitData.operatingSystemIcon is defined %}<img src="{{ visitData.operatingSystemIcon }}" width="16px" height="16px"/>{% endif %}{% if visitData.operatingSystem is defined %}<span>{{ visitData.operatingSystem }}</span>{% endif %}
             </div>
         </li>
         {% if visitData.resolution is defined %}<li><span>{{ 'Resolution_ColumnResolution'|translate }}</span><strong>{{ visitData.resolution }}</strong></li>{% endif %}

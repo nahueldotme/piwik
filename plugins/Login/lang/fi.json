@@ -11,11 +11,13 @@
         "LoginOrEmail": "Käyttäjätunnus tai sähköposti",
         "LoginPasswordNotCorrect": "Käyttäjätunnus tai salasana väärin",
         "LostYourPassword": "Unohtuiko salasana?",
+        "ChangeYourPassword": "Vaihda salasanasi",
         "MailTopicPasswordChange": "Varmista salasanan vaihto",
+        "NewPassword": "Uusi salasana",
+        "NewPasswordRepeat": "Uusi salasana (toista)",
         "PasswordChanged": "Salasana on vaihdettu.",
         "PasswordRepeat": "Salasana (uudelleen)",
         "PasswordsDoNotMatch": "Salasanat eivät täsmää.",
-        "RememberMe": "Muista minut",
-        "ResetPasswordInstructions": "Anna uusi salasana."
+        "RememberMe": "Muista minut"
     }
 }

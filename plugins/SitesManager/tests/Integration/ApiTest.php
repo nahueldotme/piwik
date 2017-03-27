@@ -8,10 +8,12 @@
 
 namespace Piwik\Plugins\SitesManager\tests\Integration;
 
+use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugins\MobileAppMeasurable;
-use Piwik\Plugins\MobileAppMeasurable\tests\Framework\Mock\Type;
+use Piwik\Plugins\MobileAppMeasurable\Type;
+use Piwik\Plugins\WebsiteMeasurable\Type as WebsiteType;
 use Piwik\Plugins\SitesManager\API;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
@@ -80,6 +82,19 @@ class ApiTest extends IntegrationTestCase
      */
     public function test_addSite_WithExcludedIps_AndTimezone_AndCurrency_AndExcludedQueryParameters_SucceedsWhenParamsAreValid()
     {
+        $this->addSiteTest($expectedWebsiteType = 'mobile-\'app');
+    }
+
+    /**
+     * @dataProvider getDifferentTypesDataProvider
+     */
+    public function test_addSite_WhenTypeIsKnown($expectedWebsiteType)
+    {
+        $this->addSiteTest($expectedWebsiteType);
+    }
+
+    private function addSiteTest($expectedWebsiteType, $settingValues = null)
+    {
         $ips = '1.2.3.4,1.1.1.*,1.2.*.*,1.*.*.*';
         $timezone = 'Europe/Paris';
         $currency = 'EUR';
@@ -87,12 +102,11 @@ class ApiTest extends IntegrationTestCase
         $expectedExcludedQueryParameters = 'p1,P2,P33333';
         $excludedUserAgents = " p1,P2, \nP3333 ";
         $expectedExcludedUserAgents = "p1,P2,P3333";
-        $expectedWebsiteType = 'mobile-\'app';
         $keepUrlFragment = 1;
         $idsite = API::getInstance()->addSite("name", "http://piwik.net/", $ecommerce = 1,
             $siteSearch = 1, $searchKeywordParameters = 'search,param', $searchCategoryParameters = 'cat,category',
             $ips, $excludedQueryParameters, $timezone, $currency, $group = null, $startDate = null, $excludedUserAgents,
-            $keepUrlFragment, $expectedWebsiteType);
+            $keepUrlFragment, $expectedWebsiteType, $settingValues);
         $siteInfo = API::getInstance()->getSiteFromId($idsite);
         $this->assertEquals($ips, $siteInfo['excluded_ips']);
         $this->assertEquals($timezone, $siteInfo['timezone']);
@@ -108,6 +122,8 @@ class ApiTest extends IntegrationTestCase
         $this->assertEquals($searchCategoryParameters, $siteInfo['sitesearch_category_parameters']);
         $this->assertEquals($expectedExcludedQueryParameters, $siteInfo['excluded_parameters']);
         $this->assertEquals($expectedExcludedUserAgents, $siteInfo['excluded_user_agents']);
+
+        return $siteInfo;
     }
 
     /**
@@ -189,13 +205,13 @@ class ApiTest extends IntegrationTestCase
 
     /**
      * @expectedException \Exception
-     * @expectedExceptionMessage Only 100 characters are allowed
+     * @expectedExceptionMessage SitesManager_OnlyMatchedUrlsAllowed
+     * @dataProvider getDifferentTypesDataProvider
      */
-    public function test_addSite_ShouldFailAndNotCreatedASite_IfASettingIsInvalid()
+    public function test_addSite_ShouldFailAndNotCreatedASite_IfASettingIsInvalid($type)
     {
         try {
-            $type = MobileAppMeasurable\Type::ID;
-            $settings = array('app_id' => str_pad('test', 789, 't'));
+            $settings = array('WebsiteMeasurable' => array(array('name' => 'exclude_unknown_urls', 'value' => 'fooBar')));
             $this->addSiteWithType($type, $settings);
         } catch (Exception $e) {
 
@@ -209,16 +225,25 @@ class ApiTest extends IntegrationTestCase
 
     public function test_addSite_ShouldSavePassedMeasurableSettings_IfSettingsAreValid()
     {
-        $type = MobileAppMeasurable\Type::ID;
-        $settings = array('app_id' => 'org.piwik.mobile2');
+        $type = WebsiteType::ID;
+        $settings = array('WebsiteMeasurable' => array(array('name' => 'urls', 'value' => array('http://www.piwik.org'))));
         $idSite = $this->addSiteWithType($type, $settings);
 
         $this->assertSame(1, $idSite);
 
-        $measurable = new Measurable($idSite);
-        $appId = $measurable->getSettingValue('app_id');
+        $settings = $this->getWebsiteMeasurable($idSite);
+        $urls = $settings->urls->getValue();
 
-        $this->assertSame('org.piwik.mobile2', $appId);
+        $this->assertSame(array('http://www.piwik.org'), $urls);
+    }
+
+    /**
+     * @return \Piwik\Plugins\WebsiteMeasurable\MeasurableSettings
+     */
+    private function getWebsiteMeasurable($idSite)
+    {
+        $settings = StaticContainer::get('Piwik\Plugin\SettingsProvider');
+        return $settings->getMeasurableSettings('WebsiteMeasurable', $idSite, null);
     }
 
     /**
@@ -642,7 +667,9 @@ class ApiTest extends IntegrationTestCase
         FakeAccess::setIdSitesAdmin(array());
 
         $sites = API::getInstance()->getSitesWithViewAccess();
+
         // we don't test the ts_created
+
         unset($sites[0]['ts_created']);
         unset($sites[1]['ts_created']);
         $this->assertEquals($resultWanted, $sites);
@@ -753,6 +780,7 @@ class ApiTest extends IntegrationTestCase
         // Updating the group to something
         $group = 'something';
         API::getInstance()->updateSite($idsite, "test toto@{}", $newMainUrl, $ecommerce = 0, $ss = true, $ss_kwd = null, $ss_cat = '', $ips = null, $parametersExclude = null, $timezone = null, $currency = null, $group);
+
         $websites = API::getInstance()->getSitesFromGroup($group);
         $this->assertEquals(1, count($websites));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($websites[0]['ts_created'])));
@@ -844,7 +872,7 @@ class ApiTest extends IntegrationTestCase
 
     /**
      * @expectedException \Exception
-     * @expectedExceptionMessage Only 100 characters are allowed
+     * @expectedExceptionMessage SitesManager_OnlyMatchedUrlsAllowed
      */
     public function test_updateSite_ShouldFailAndNotUpdateSite_IfASettingIsInvalid()
     {
@@ -852,7 +880,8 @@ class ApiTest extends IntegrationTestCase
         $idSite = $this->addSiteWithType($type, array());
 
         try {
-            $this->updateSiteSettings($idSite, 'newSiteName', array('app_id' => str_pad('t', 589, 't')));
+            $settings = array('MobileAppMeasurable' => array(array('name' => 'exclude_unknown_urls', 'value' => 'fooBar')));
+            $this->updateSiteSettings($idSite, 'newSiteName', $settings);
 
         } catch (Exception $e) {
             // verify nothing was updated (not even the name)
@@ -865,17 +894,21 @@ class ApiTest extends IntegrationTestCase
 
     public function test_updateSite_ShouldSavePassedMeasurableSettings_IfSettingsAreValid()
     {
-        $type = MobileAppMeasurable\Type::ID;
+        $type = WebsiteType::ID;
         $idSite = $this->addSiteWithType($type, array());
 
         $this->assertSame(1, $idSite);
 
-        $this->updateSiteSettings($idSite, 'newSiteName', $settings = array('app_id' => 'org.piwik.mobile2'));
+        $settings = array('WebsiteMeasurable' => array(array('name' => 'urls', 'value' => array('http://www.piwik.org'))));
+
+        $this->updateSiteSettings($idSite, 'newSiteName', $settings);
+
+        $settings = $this->getWebsiteMeasurable($idSite);
 
         // verify it was updated
         $measurable = new Measurable($idSite);
         $this->assertSame('newSiteName', $measurable->getName());
-        $this->assertSame('org.piwik.mobile2', $measurable->getSettingValue('app_id'));
+        $this->assertSame(array('http://www.piwik.org'), $settings->urls->getValue());
     }
 
     public function test_updateSite_CorreclySavesExcludedUnknownUrlSettings()
@@ -892,6 +925,38 @@ class ApiTest extends IntegrationTestCase
 
         $site = API::getInstance()->getSiteFromId($idSite);
         $this->assertEquals(1, $site['exclude_unknown_urls']);
+    }
+
+    /**
+     * @dataProvider getDifferentTypesDataProvider
+     */
+    public function test_updateSite_WithDifferentTypes($type)
+    {
+        $idSite = $this->addSiteWithType('website', array());
+
+        $site = API::getInstance()->getSiteFromId($idSite);
+        $this->assertEquals(0, $site['exclude_unknown_urls']);
+
+        API::getInstance()->updateSite($idSite, $siteName = 'new site name', $urls = null, $ecommerce = true, $siteSearch = false,
+            $searchKeywordParams = null, $searchCategoryParams = null, $excludedIps = null, $excludedQueryParameters = null,
+            $timzeone = null, $currency = 'NZD', $group = null, $startDate = null, $excludedUserAgents = null,
+            $keepUrlFragments = null, $type, $settings = null, $excludeUnknownUrls = true);
+
+        $site = API::getInstance()->getSiteFromId($idSite);
+        $this->assertEquals('new site name', $site['name']);
+        $this->assertEquals(1, $site['exclude_unknown_urls']);
+        $this->assertEquals(1, $site['ecommerce']);
+        $this->assertEquals(0, $site['sitesearch']);
+        $this->assertEquals('NZD', $site['currency']);
+    }
+
+    public function getDifferentTypesDataProvider()
+    {
+        return array(
+            array('website'),
+            array('mobileapp'),
+            array('notexistingtype'),
+        );
     }
 
     /**
@@ -1210,7 +1275,6 @@ class ApiTest extends IntegrationTestCase
     {
         return array(
             'Piwik\Access' => new FakeAccess(),
-            'Piwik\Plugins\MobileAppMeasurable\Type' => new Type()
         );
     }
 

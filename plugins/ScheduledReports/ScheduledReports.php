@@ -64,7 +64,7 @@ class ScheduledReports extends \Piwik\Plugin
 
     private static $managedReportFormats = array(
         ReportRenderer::HTML_FORMAT => 'plugins/Morpheus/images/html_icon.png',
-        ReportRenderer::PDF_FORMAT  => 'plugins/DevicePlugins/images/plugins/pdf.gif',
+        ReportRenderer::PDF_FORMAT  => 'plugins/DevicePlugins/images/plugins/pdf.png',
         ReportRenderer::CSV_FORMAT  => 'plugins/Morpheus/images/export.png',
     );
 
@@ -111,6 +111,7 @@ class ScheduledReports extends \Piwik\Plugin
     {
         $translationKeys[] = "ScheduledReports_ReportSent";
         $translationKeys[] = "ScheduledReports_ReportUpdated";
+        $translationKeys[] = "ScheduledReports_ReportHourWithUTC";
     }
 
     /**
@@ -128,7 +129,8 @@ class ScheduledReports extends \Piwik\Plugin
 
     public function getJsFiles(&$jsFiles)
     {
-        $jsFiles[] = "plugins/ScheduledReports/javascripts/pdf.js";
+        $jsFiles[] = "plugins/ScheduledReports/angularjs/manage-scheduled-report/manage-scheduled-report.controller.js";
+        $jsFiles[] = "plugins/ScheduledReports/angularjs/manage-scheduled-report/manage-scheduled-report.directive.js";
     }
 
     public function getStylesheetFiles(&$stylesheets)
@@ -304,7 +306,6 @@ class ScheduledReports extends \Piwik\Plugin
         }
 
         $periods = self::getPeriodToFrequencyAsAdjective();
-        $message = Piwik::translate('ScheduledReports_EmailHello');
         $subject = Piwik::translate('General_Report') . ' ' . $reportTitle . " - " . $prettyDate;
 
         $mail = new Mail();
@@ -336,13 +337,7 @@ class ScheduledReports extends \Piwik\Plugin
 
                 // Needed when using images as attachment with cid
                 $mail->setType(Zend_Mime::MULTIPART_RELATED);
-                $message .= "<br/>$messageFindBelow<br/>$messageSentFrom";
-
-                if ($displaySegmentInfo) {
-                    $message .= " " . $segmentInfo;
-                }
-
-                $mail->setBodyHtml($message . "<br/><br/>" . $contents);
+                $mail->setBodyHtml($contents);
                 break;
 
             case 'csv':

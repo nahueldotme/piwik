@@ -90,6 +90,8 @@ backends[] = file
 ; Redis server configuration.
 host = "127.0.0.1"
 port = 6379
+; instead of host and port a unix socket path can be configured
+unix_socket = ""
 timeout = 0.0
 password = ""
 database = 14
@@ -242,8 +244,7 @@ process_new_segments_from = "beginning_of_time"
 ; it is useful to have an actual string to write in the UI
 action_default_name = index
 
-; if you want all your users to use Piwik in only one language, disable the LanguagesManager
-; plugin, and set this default_language (users won't see the language drop down)
+; default language to use in Piwik
 default_language = en
 
 ; default number of elements in the datatable
@@ -353,8 +354,8 @@ login_password_recovery_replyto_email_address = "no-reply@{DOMAIN}"
 ; name that appears as a Reply-to in the password recovery email
 login_password_recovery_replyto_email_name = "No-reply"
 
-; By default when user logs out he is redirected to Piwik "homepage" usually the Login form.
-; Uncomment the next line to set a URL to redirect the user to after he logs out of Piwik.
+; By default when user logs out they are redirected to Piwik "homepage" usually the Login form.
+; Uncomment the next line to set a URL to redirect the user to after they log out of Piwik.
 ; login_logout_url = http://...
 
 ; Set to 1 to disable the framebuster on standard Non-widgets pages (a click-jacking countermeasure).
@@ -442,7 +443,14 @@ multisites_refresh_after_seconds = 300
 ; set the HTTPS environment variable.
 assume_secure_protocol = 0
 
+; Set to 1 if you're using more than one server for your Piwik installation. For example if you are using Piwik in a
+; load balanced environment, if you have configured failover or if you're just using multiple servers in general.
+; By enabling this flag we will for example not allow the installation of a plugin via the UI as a plugin would be only
+; installed on one server or a config one change would be only made on one server instead of all servers.
+multi_server_environment = 0
+
 ; List of proxy headers for client IP addresses
+; Piwik will determine the user IP by extracting the first IP address found in this proxy header.
 ;
 ; CloudFlare (CF-Connecting-IP)
 ;proxy_client_headers[] = HTTP_CF_CONNECTING_IP
@@ -526,15 +534,15 @@ absolute_chroot_path =
 ; This may for example be useful when doing Mysql AWS replication
 enable_load_data_infile = 1
 
-; By setting this option to 0, you can disable the Piwik marketplace. This is useful to prevent giving the Super user
-; the access to disk and install custom PHP code (Piwik plugins).
-enable_marketplace = 1
-
 ; By setting this option to 0:
 ; - links to Enable/Disable/Uninstall plugins will be hidden and disabled
 ; - links to Uninstall themes will be disabled (but user can still enable/disable themes)
-; - as well as disabling plugins admin actions (such as "Upload new plugin"), setting this to 1 will have same effect as setting enable_marketplace=1
 enable_plugins_admin = 1
+
+; By setting this option to 1, it will be possible for Super Users to upload Piwik plugin ZIP archives directly in Piwik Administration.
+; Enabling this opens a remote code execution vulnerability where
+; an attacker who gained Super User access could execute custom PHP code in a Piwik plugin.
+enable_plugin_upload = 0
 
 ; By setting this option to 0, you can prevent Super User from editing the Geolocation settings.
 enable_geolocation_admin = 1
@@ -555,6 +563,9 @@ enable_auto_update = 1
 ; By setting this option to 0, no emails will be sent in case of an available core.
 ; If set to 0 it also disables the "sent plugin update emails" feature in general and the related setting in the UI.
 enable_update_communication = 1
+
+; Comma separated list of plugin names for which console commands should be loaded (applies when Piwik is not installed yet)
+always_load_commands_from_plugin=
 
 ; This controls whether the pivotBy query parameter can be used with any dimension or just subtable
 ; dimensions. If set to 1, it will fetch a report with a segment for each row of the table being pivoted.
@@ -615,8 +626,8 @@ cookie_path =
 record_statistics = 1
 
 ; length of a visit in seconds. If a visitor comes back on the website visit_standard_length seconds
-; after his last page view, it will be recorded as a new visit. In case you are using the Piwik JavaScript tracker to 
-; calculate the visit count correctly, make sure to call the method "setSessionCookieTimeout" eg 
+; after their last page view, it will be recorded as a new visit. In case you are using the Piwik JavaScript tracker to
+; calculate the visit count correctly, make sure to call the method "setSessionCookieTimeout" eg
 ; `_paq.push(['setSessionCookieTimeout', timeoutInSeconds=1800])`
 visit_standard_length = 1800
 
@@ -631,7 +642,7 @@ default_time_one_page_visit = 0
 
 ; Comma separated list of URL query string variable names that will be removed from your tracked URLs
 ; By default, Piwik will remove the most common parameters which are known to change often (eg. session ID parameters)
-url_query_parameter_to_exclude_from_url = "gclid,fb_xd_fragment,fb_comment_id,phpsessid,jsessionid,sessionid,aspsessionid,doing_wp_cron,sid"
+url_query_parameter_to_exclude_from_url = "gclid,fb_xd_fragment,fb_comment_id,phpsessid,jsessionid,sessionid,aspsessionid,doing_wp_cron,sid,pk_vid"
 
 ; if set to 1, Piwik attempts a "best guess" at the visitor's country of
 ; origin when the preferred language tag omits region information.
@@ -693,6 +704,11 @@ bulk_requests_use_transaction = 1
 ; token_auth with an "admin" access is required. If you set this setting to 0, the token_auth will not be required anymore.
 ; DO NOT USE THIS SETTING ON PUBLIC PIWIK SERVERS
 tracking_requests_require_authentication = 1
+
+; By default, Piwik accepts only tracking requests for up to 1 day in the past. For tracking requests with a custom date
+; date is older than 1 day, Piwik requires an authenticated tracking requests. By setting this config to another value
+; You can change how far back Piwik will track your requests without authentication. The configured value is in seconds.
+tracking_requests_require_authentication_when_custom_timestamp_newer_than = 86400;
 
 [Segments]
 ; Reports with segmentation in API requests are processed in real time.
@@ -776,7 +792,7 @@ Plugins[] = VisitFrequency
 Plugins[] = VisitTime
 Plugins[] = VisitorInterest
 Plugins[] = ExampleAPI
-Plugins[] = ExampleRssWidget
+Plugins[] = RssWidget
 Plugins[] = Feedback
 Plugins[] = Monolog
 
@@ -805,6 +821,7 @@ Plugins[] = Resolution
 Plugins[] = DevicePlugins
 Plugins[] = Heartbeat
 Plugins[] = Intl
+Plugins[] = Marketplace
 Plugins[] = ProfessionalServices
 Plugins[] = UserId
 Plugins[] = CustomPiwikJs

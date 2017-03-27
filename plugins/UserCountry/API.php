@@ -10,6 +10,7 @@ namespace Piwik\Plugins\UserCountry;
 
 use Exception;
 use Piwik\Archive;
+use Piwik\Container\StaticContainer;
 use Piwik\DataTable;
 use Piwik\Metrics;
 use Piwik\Piwik;
@@ -165,6 +166,24 @@ class API extends \Piwik\Plugin\API
     }
 
     /**
+     * Returns a simple mapping from country code to country name
+     *
+     * @return \string[]
+     */
+    public function getCountryCodeMapping()
+    {
+        $regionDataProvider = StaticContainer::get('Piwik\Intl\Data\Provider\RegionDataProvider');
+
+        $countryCodeList = $regionDataProvider->getCountryList();
+
+        array_walk($countryCodeList, function(&$item, $key) {
+            $item = Piwik::translate('Intl_Country_'.strtoupper($key));
+        });
+
+        return $countryCodeList;
+    }
+
+    /**
      * Uses a location provider to find/guess the location of an IP address.
      *
      * See LocationProvider::getLocation to see the details
@@ -196,6 +215,26 @@ class API extends \Piwik\Plugin\API
         }
         $location['ip'] = $ip;
         return $location;
+    }
+
+    /**
+     * Set the location provider
+     *
+     * @param string $providerId  The ID of the provider to use  eg 'default', 'geoip_php', ...
+     * @throws Exception if ID is invalid
+     */
+    public function setLocationProvider($providerId)
+    {
+        Piwik::checkUserHasSuperUserAccess();
+
+        if (!UserCountry::isGeoLocationAdminEnabled()) {
+            throw new \Exception('Setting geo location has been disabled in config.');
+        }
+
+        $provider = LocationProvider::setCurrentProvider($providerId);
+        if ($provider === false) {
+            throw new Exception("Invalid provider ID: '$providerId'.");
+        }
     }
 
     protected function getDataTable($name, $idSite, $period, $date, $segment)
